@@ -9,11 +9,7 @@ export function getCompanyProfile() {
 }
 
 export function updateCompanyProfile(payload) {
-  return api.post(COMPANY_PROFILE_UPDATE_ENDPOINT, payload, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return api.post(COMPANY_PROFILE_UPDATE_ENDPOINT, payload);
 }
 
 export function getCompanyProfileData(response) {

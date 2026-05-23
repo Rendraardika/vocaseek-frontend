@@ -39,11 +39,7 @@ export function registerApplicant(payload) {
 }
 
 export function registerCompany(payload) {
-  return api.post(REGISTER_ENDPOINT, payload, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return api.post(REGISTER_ENDPOINT, payload);
 }
 
 export function logoutUser() {

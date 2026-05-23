@@ -7,15 +7,7 @@ export function getAdminProfile() {
 }
 
 export function updateAdminProfile(payload) {
-  const isMultipart = payload instanceof FormData;
-
-  return api.post(`${ADMIN_BASE}/profile/update`, payload, isMultipart
-    ? {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    : undefined);
+  return api.post(`${ADMIN_BASE}/profile/update`, payload);
 }
 
 export function changeAdminPassword(payload) {

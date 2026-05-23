@@ -123,6 +123,11 @@ api.interceptors.request.use(async (config) => {
     }
   }
 
+  // Handle FormData: Remove Content-Type header to let axios auto-set with boundary
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
+
   const token = getAccessToken();
 
   if (token) {
