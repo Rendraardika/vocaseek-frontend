@@ -130,7 +130,8 @@ api.interceptors.request.use(async (config) => {
 
   const token = getAccessToken();
 
-  if (token) {
+  // Only set Authorization header if token is non-empty
+  if (token && token.trim()) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
@@ -156,7 +157,11 @@ api.interceptors.response.use(
       const loginPath = currentRole.includes("company") ? "/login-company" : "/login";
 
       clearAuthSession();
-      window.location.replace(loginPath);
+      
+      // Use setTimeout to prevent race condition and allow pending requests to complete
+      setTimeout(() => {
+        window.location.replace(loginPath);
+      }, 100);
     }
 
     return Promise.reject(error);
