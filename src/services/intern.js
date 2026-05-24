@@ -9,7 +9,7 @@ export function getInternTestQuestions() {
 }
 
 export function updateInternProfile(payload) {
-  return api.put("/intern/update-profile", payload);
+  return api.post("/intern/update-profile", payload);
 }
 
 export function startInternTest() {
