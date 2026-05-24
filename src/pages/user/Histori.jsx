@@ -15,7 +15,10 @@ import {
   extractApplicationCollection,
   mapAppliedJobFromApplication,
 } from "../../utils/applicationStatus";
-import { getInternApplications } from "../../services/intern";
+import {
+  getInternApplications,
+  withdrawInternApplication,
+} from "../../services/intern";
 
 const defaultProfile = {
   photo: "",
@@ -146,7 +149,22 @@ export default function Histori() {
     setShowWithdrawModal(false);
   };
 
-  const handleConfirmWithdraw = () => {
+  const handleConfirmWithdraw = async () => {
+    if (!appliedJob.id) {
+      setShowWithdrawModal(false);
+      alert("Data lamaran belum sinkron. Coba refresh halaman lalu ulangi pengunduran diri.");
+      return;
+    }
+
+    try {
+      await withdrawInternApplication(appliedJob.id);
+    } catch (error) {
+      console.error("Gagal memproses pengunduran diri di backend:", error);
+      setShowWithdrawModal(false);
+      alert("Pengunduran diri belum berhasil diproses. Coba refresh lalu ulangi.");
+      return;
+    }
+
     setShowWithdrawModal(false);
     setShowSuccessToast(true);
 

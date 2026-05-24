@@ -27,3 +27,7 @@ export function applyInternJob(payload) {
 export function getInternApplications() {
   return api.get("/intern/applications");
 }
+
+export function withdrawInternApplication(id) {
+  return api.post(`/intern/applications/${id}/withdraw`);
+}
