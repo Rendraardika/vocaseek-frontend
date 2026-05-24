@@ -29,6 +29,13 @@ export function normalizeList(value) {
   return [value];
 }
 
+function hasPositiveNumber(value) {
+  if (value === null || value === undefined || value === "") return false;
+
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) && numberValue > 0;
+}
+
 function resolveNestedDocumentValue(item = {}) {
   const previewUrl = item?.preview_url || item?.previewUrl;
   const documentValue = item?.document || item?.document_file || item?.documentFile;
@@ -684,14 +691,7 @@ export function mapTalentDetailPayload(rawItem = {}) {
       profile?.review_jawaban ||
       profile?.pretest_answers,
   );
-  const hasAssessment = Boolean(
-    testStartedAt ||
-      testFinishedAt ||
-      rawItem?.assessment ||
-      rawItem?.test_result ||
-      assessmentScore ||
-      assessmentAnswers.length,
-  );
+  const hasAssessment = Boolean(testFinishedAt);
 
   return {
     id: String(rawItem?.user_id || rawItem?.id || user?.user_id || ""),
@@ -750,10 +750,6 @@ export function mapTalentDetailPayload(rawItem = {}) {
         ? `Kandidat menyelesaikan tes pada ${formatTalentDate(testFinishedAt)}`
         : testStartedAt
           ? `Tes dimulai pada ${formatTalentDate(testStartedAt)}`
-          : assessmentScore
-            ? `Skor assessment tercatat: ${assessmentScore}`
-          : assessmentAnswers.length
-            ? `${assessmentAnswers.length} jawaban pre-test tersedia untuk direview`
           : "Belum ada hasil assessment",
       summary: hasAssessment
         ? "Peserta sudah mengerjakan pre-test dan hasilnya siap ditinjau."

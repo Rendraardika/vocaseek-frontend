@@ -395,19 +395,21 @@ export default function DetailTalent() {
                     "Belum ada hasil assessment untuk ditampilkan."}
                 </div>
 
-                <div className="detail-assessment-footer">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate(
-                        `/admin/mitra/talent/${talent?.id || id}/assessment-review`,
-                      )
-                    }
-                    className="detail-review-button"
-                  >
-                    Review Jawaban
-                  </button>
-                </div>
+                {talent?.assessment?.available && (
+                  <div className="detail-assessment-footer">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigate(
+                          `/admin/mitra/talent/${talent?.id || id}/assessment-review`,
+                        )
+                      }
+                      className="detail-review-button"
+                    >
+                      Review Jawaban
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

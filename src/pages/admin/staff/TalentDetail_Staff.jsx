@@ -453,15 +453,17 @@ export default function TalentDetailStaff() {
                   {talent?.assessment?.summary || "Belum ada hasil assessment untuk ditampilkan."}
                 </div>
 
-                <div className="detail-assessment-footer">
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/admin/staff/talent/${id}/assessment-review`)}
-                    className="detail-review-button"
-                  >
-                    Review Jawaban
-                  </button>
-                </div>
+                {talent?.assessment?.available && (
+                  <div className="detail-assessment-footer">
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/admin/staff/talent/${id}/assessment-review`)}
+                      className="detail-review-button"
+                    >
+                      Review Jawaban
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
