@@ -179,15 +179,10 @@ export default function Soal1() {
   };
 
   const handlePickNumber = (questionId) => {
-    const isAnswered = ["Ya", "Tidak"].includes(answers[questionId]);
-    if (isAnswered) return;
-
     setActiveNo(questionId);
   };
 
   const handleAnswer = (value) => {
-    if (["Ya", "Tidak"].includes(currentAnswer)) return;
-
     setAnswers((prev) => ({
       ...prev,
       [activeNo]: value,
@@ -256,7 +251,6 @@ export default function Soal1() {
                     type="button"
                     className={`assessNumBtn ${isAnswered ? "isAnswered" : ""} ${isActiveBtn ? "isActive" : ""}`}
                     onClick={() => handlePickNumber(questionId)}
-                    disabled={isAnswered}
                   >
                     {index + 1}
                   </button>
@@ -283,7 +277,6 @@ export default function Soal1() {
                 type="button"
                 className={`answerCard ${currentAnswer === "Ya" ? "selected" : ""}`}
                 onClick={() => handleAnswer("Ya")}
-                disabled={isAnsweredCurrent}
               >
                 <div className="answerIcon yesIcon" aria-hidden="true">
                   ✓
@@ -296,7 +289,6 @@ export default function Soal1() {
                 type="button"
                 className={`answerCard ${currentAnswer === "Tidak" ? "selected" : ""}`}
                 onClick={() => handleAnswer("Tidak")}
-                disabled={isAnsweredCurrent}
               >
                 <div className="answerIcon noIcon" aria-hidden="true">
                   ✕
