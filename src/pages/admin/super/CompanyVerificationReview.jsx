@@ -24,6 +24,23 @@ import { setScopedUiItem } from "../../../utils/uiScopedStorage";
 
 const COMPANY_PREVIEW_STORAGE_KEY = "company_verification_preview";
 
+function getFileNameFromUrl(value = "") {
+  if (typeof value !== "string" || !value) return "";
+
+  try {
+    const cleanValue = value.split("?")[0];
+    const parts = cleanValue.split("/");
+    return decodeURIComponent(parts[parts.length - 1] || "");
+  } catch {
+    return "";
+  }
+}
+
+function getDocumentDisplayName(value = "") {
+  const filename = getFileNameFromUrl(value);
+  return filename || "File dokumen terlampir";
+}
+
 function ApproveCompanyModal({
   open,
   type,
@@ -75,6 +92,7 @@ function buildDocumentList(company) {
       slug: "loa",
       title: "Letter of Acceptance (LoA)",
       value: company?.documents?.loa,
+      displayName: getDocumentDisplayName(company?.documents?.loa),
       icon: <FileText size={22} />,
       iconClass: "cvr-doc-icon red",
     },
@@ -82,6 +100,7 @@ function buildDocumentList(company) {
       slug: "akta",
       title: "Akta Pendirian Perusahaan",
       value: company?.documents?.akta,
+      displayName: getDocumentDisplayName(company?.documents?.akta),
       icon: <Landmark size={22} />,
       iconClass: "cvr-doc-icon blue",
     },
@@ -278,7 +297,7 @@ export default function CompanyVerificationReview() {
                           <div className={doc.iconClass}>{doc.icon}</div>
                           <div className="cvr-doc-meta">
                             <strong>{doc.title}</strong>
-                            <span>{doc.value}</span>
+                            <span title={doc.value}>{doc.displayName}</span>
                           </div>
                         </div>
 

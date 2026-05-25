@@ -239,6 +239,7 @@ textarea {
   align-items: center;
   gap: 14px;
   min-width: 0;
+  flex: 1;
 }
 
 .cvr-doc-icon {
@@ -273,6 +274,7 @@ textarea {
 
 .cvr-doc-meta {
   min-width: 0;
+  flex: 1;
 }
 
 .cvr-doc-meta strong {
@@ -287,6 +289,14 @@ textarea {
   display: block;
   font-size: 13px;
   color: #7a889f;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cvr-doc-item .cvr-preview-btn {
+  flex-shrink: 0;
 }
 
 .cvr-preview-btn {

@@ -46,12 +46,14 @@ function FileItem({ document, color = "orange" }) {
   };
 
   const { title, subtitle, available, url } = document;
+  const handleOpen = () => {
+    if (!available || !url) return;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div
-      onClick={
-        available ? () => window.open(url, "_blank", "noopener,noreferrer") : undefined
-      }
+      onClick={handleOpen}
       className={`detail-file-item ${available ? "clickable" : "empty"}`}
     >
       <div className="detail-file-left">
@@ -74,6 +76,11 @@ function FileItem({ document, color = "orange" }) {
       <button
         type="button"
         className={`detail-file-action ${available ? "" : "empty"}`}
+        onClick={(event) => {
+          event.stopPropagation();
+          handleOpen();
+        }}
+        disabled={!available}
       >
         {available ? "Lihat File" : "Kosong"}
       </button>
@@ -150,6 +157,11 @@ export default function DetailTalent() {
   const documents = talent?.documents || {};
   const experiences = talent?.experiences || [];
   const certifications = talent?.certifications || [];
+
+  const openDocument = (url) => {
+    if (!url) return;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div className="detail-talent-layout">
