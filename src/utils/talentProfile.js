@@ -29,11 +29,35 @@ export function normalizeList(value) {
   return [value];
 }
 
-function hasPositiveNumber(value) {
-  if (value === null || value === undefined || value === "") return false;
+function hasAssessmentScore(value) {
+  return value !== null && value !== undefined && String(value).trim() !== "";
+}
 
-  const numberValue = Number(value);
-  return Number.isFinite(numberValue) && numberValue > 0;
+function normalizeAssessmentAnswerList(value) {
+  const normalized = normalizeList(value);
+
+  if (
+    normalized.length === 1 &&
+    normalized[0] &&
+    typeof normalized[0] === "object" &&
+    !Array.isArray(normalized[0])
+  ) {
+    const answerMap = normalized[0];
+    const looksLikeAnswerMap = Object.keys(answerMap).some((key) =>
+      /^\d+$/.test(String(key)),
+    );
+
+    return looksLikeAnswerMap
+      ? Object.entries(answerMap).map(([questionId, answer]) => ({
+          question_id: Number(questionId),
+          ...(answer && typeof answer === "object"
+            ? answer
+            : { selected_option: answer }),
+        }))
+      : [];
+  }
+
+  return normalized;
 }
 
 function resolveNestedDocumentValue(item = {}) {
@@ -676,7 +700,7 @@ export function mapTalentDetailPayload(rawItem = {}) {
     rawItem?.test_score,
     rawItem?.hasil_test,
   );
-  const assessmentAnswers = normalizeList(
+  const assessmentAnswers = normalizeAssessmentAnswerList(
     rawItem?.review_jawaban ||
       rawItem?.pretest_answers ||
       rawItem?.assessment_answers ||
@@ -691,7 +715,11 @@ export function mapTalentDetailPayload(rawItem = {}) {
       profile?.review_jawaban ||
       profile?.pretest_answers,
   );
-  const hasAssessment = Boolean(testFinishedAt);
+  const hasAssessment = Boolean(
+    testFinishedAt ||
+      assessmentAnswers.length > 0 ||
+      hasAssessmentScore(assessmentScore),
+  );
 
   return {
     id: String(rawItem?.user_id || rawItem?.id || user?.user_id || ""),
@@ -750,7 +778,9 @@ export function mapTalentDetailPayload(rawItem = {}) {
         ? `Kandidat menyelesaikan tes pada ${formatTalentDate(testFinishedAt)}`
         : testStartedAt
           ? `Tes dimulai pada ${formatTalentDate(testStartedAt)}`
-          : "Belum ada hasil assessment",
+          : hasAssessment
+            ? "Hasil assessment kandidat tersedia"
+            : "Belum ada hasil assessment",
       summary: hasAssessment
         ? "Peserta sudah mengerjakan pre-test dan hasilnya siap ditinjau."
         : "Peserta belum mengerjakan pre-test.",

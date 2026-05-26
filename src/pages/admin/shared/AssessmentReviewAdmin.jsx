@@ -118,8 +118,35 @@ function readScopedPretestAnswers(talentId) {
   return [];
 }
 
+function normalizeAnswerSource(value) {
+  const normalized = normalizeList(value);
+
+  if (
+    normalized.length === 1 &&
+    normalized[0] &&
+    typeof normalized[0] === "object" &&
+    !Array.isArray(normalized[0])
+  ) {
+    const answerMap = normalized[0];
+    const looksLikeAnswerMap = Object.keys(answerMap).some((key) =>
+      /^\d+$/.test(String(key)),
+    );
+
+    if (looksLikeAnswerMap) {
+      return Object.entries(answerMap).map(([questionId, answer]) => ({
+        question_id: Number(questionId),
+        ...(answer && typeof answer === "object"
+          ? answer
+          : { selected_option: answer }),
+      }));
+    }
+  }
+
+  return normalized;
+}
+
 function buildReviewAnswers(rawTalent = {}, talentId = "") {
-  let answersSource = normalizeList(
+  let answersSource = normalizeAnswerSource(
     rawTalent?.review_jawaban ||
       rawTalent?.pretest_answers ||
       rawTalent?.assessment_answers ||
